@@ -1,0 +1,117 @@
+settings.py
+============
+INSTALLED_APPS=[
+	'rest_framework.authentication'
+]
+
+
+url.py
+=========
+from rest_framework import routers
+router=routers.DefaultRouter()
+router.register('api',views.EmpolyeeCRUDCBV)
+
+
+
+Authentiction
+===============
+1.IsAuthenticate
+IsAdminUser
+3.IsAuthenticatedOrReadOnly(Only get operation)
+
+for this in views.py
+
+class EmployeeCRUDCBV(ModelViewSet):
+	queryset=Employee.objects.all()
+	serializer_class=EmployeeSerializer
+	authentication_class=[TokenAuthentication]
+	permission_class=[IsAuthenticated,]
+
+
+
+Most Powerfull
+================
+5.DjangoPermission
+
+to access end point -->authentication must be required
+GET-->authentication is enough model permission not required
+POST,PUT,PATCH,DELETE==>authentication+model permission
+
+
+
+We can use custom permission
+==============================
+Eg1.readonly Operations
+
+
+class IsReadOnly(BasePemission):
+	def has_permission(self,requset,view):
+		if request.method in SAFE_METHODS:
+			return True
+		else:
+			return False
+
+
+
+Eg2.Both read and patch opreations only
+
+class IsGetandPatch(BasePermission):
+	def has_permission(self,request,view):
+		allowed_methods=['GET','PATCH']
+	if request.methods in allowed_methods:
+		return True
+	else:
+		return False
+		
+
+
+Eg3.if name is nitish allowed all methods
+    if name is even length allowed only safe methods
+    else not
+
+class NitishPemission(BasePermission):
+	def has_permission(self,request,view):
+		username=request.user.username
+		if username.lower=='nitish':
+			return True
+		elif username!='' and len(username)%2==0 and request.method in SAFE_METHODS:
+			return True
+		else:
+			return False
+
+========================================================================================================================================================================
+========================================================================================================================================================================
+JWT_TOKEN
+
+url.py
+-------
+from rest_framework.authtoken import views
+from rest_framework.views import obtain_jwt_token,verify_jwt_token,refresh_jwt_token
+
+
+urlpatterns=[
+	url('auth-jwt/',obtain_jwt_token)
+	url('auth-jwt-verify/',verify_jwt_token)
+	url('auth-jwt-refresh/',refresh_jwt_token)
+]
+
+===========================================================================================================================================================================
+==========================================================================================================================================================================
+CustomAuthentication
+-------------------
+create a new python file
+
+authentication.py
+
+
+class CustomAuth(BaseAuthentication):
+	def authenticate(self,requset):
+		username=requset.GET.get('username')
+		if username is None:
+			return None
+		try:
+			user=User.objects.all(username=username)
+		except User.DoesNotExit:
+			raise AuththenticationFailed("Your credential is invlalid")
+		else:
+			return(user,None)
