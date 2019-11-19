@@ -1,0 +1,28 @@
+in settings.py
+REST_FRAMEWORK={
+	"DEFAULT_FILTER_BACKEND":("rest_framework.filters.SearchFilter","rest_framework.filters.OrderingFilter")
+}
+
+Plian Vanila Filter
+=====================
+In views.py
+class EmployeeCRUDCBV(generic.ListApiView):
+	query_set=Employee.objects.all()
+	serilaizer_class=EmployeeSerializer
+	def query_set(self):
+		qs=Employee.objects.all()
+		name=self.request.GET.get('ename')
+		if ename is not None:
+			qs=qs.filter(ename__icontains='ename')
+		return qs
+
+
+DRF filter
+==============
+
+In views.py
+class EmployeeCRUDCBV(generic.ListApiView):
+	query_set=Employee.objects.all()
+	serilaizer_class=EmployeeSerializer
+	search_fields=('ename','eno')
+	ordering_filels=('eno')
