@@ -1,0 +1,43 @@
+settings.py
+=============
+REST_FRAMEWORK={
+ "DEFAULT_PAGINATION_CLASS":"rest_framework.pagination.PageNumberPagination",
+ "PAGE_SIZE":10,
+}
+
+create pagination.py
+
+PageNumberPagination
+===========================
+page by page 
+page_size
+we can't talj about limit and offset
+
+
+class MyPagination(PageNumberPagination):
+	page_size=5
+	page_query_param='mypage'
+	page_size_query_param="num"
+	max_page_size=15
+
+
+
+LimitOffsetpagination
+========================
+limit and offset
+we can't talk about ordering
+
+class Mypagination(LimitOffsetpagination):
+	default_limit=10
+	max_limit=20
+
+
+CursorPagination
+=================
+ordering,pagesize
+offset and limit can't
+
+
+class MyPagination(CursorPagination):
+	ordering='esal'
+	page_size=5
