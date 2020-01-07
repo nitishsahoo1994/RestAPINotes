@@ -16,7 +16,7 @@ router.register('api',views.EmpolyeeCRUDCBV)
 Authentiction
 ===============
 1.IsAuthenticate
-IsAdminUser
+2.IsAdminUser
 3.IsAuthenticatedOrReadOnly(Only get operation)
 
 for this in views.py
